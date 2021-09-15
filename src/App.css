@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+.calendar-wrapper {
+  width: 900px;
+  background: #fff;
+  color: #000;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
