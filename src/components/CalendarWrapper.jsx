@@ -1,9 +1,9 @@
+import React from 'react';
 import { DateTime } from 'luxon';
+import CalendarBody from './CalendarBody';
 
-const text = 'WRAPPER'
 const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const dt = DateTime.fromFormat('01/09/2021', 'dd/MM/yyyy');
-const month = dt.month;
 
 export const calcWeeksInMonth = (date) => {
     const dt = DateTime.fromFormat(date, 'dd/MM/yyyy');
@@ -32,6 +32,30 @@ export const calcWeeksInMonth = (date) => {
     }
 }
 
+export const generateMonthDays = (weeksCount) => {
+    const monthDays = [];
+    let dayDate = dt.startOf('week')
+
+    for (let perWeek = 0; perWeek < weeksCount; perWeek++) {
+        const week = [];
+
+        for (let perDay = 0; perDay < 7; perDay++) {
+            week.push({
+                date: dayDate.toISODate(),
+            });
+
+            // get next day
+            dayDate = dayDate.plus({days: 1})
+        }
+
+        monthDays.push(week)
+    }
+
+    return monthDays
+}
+
+const fullCalendarDates = generateMonthDays(calcWeeksInMonth('01/09/2021'))
+
 const calendarWrapper = () => {
     return (
         <div className="calendar-wrapper">
@@ -40,8 +64,7 @@ const calendarWrapper = () => {
                     return (<span key={item}>{item}</span>)
                 })}
             </div>
-            {text}
-            {month}
+            <CalendarBody weeks={fullCalendarDates} />
         </div>
     )
 }

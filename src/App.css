@@ -43,7 +43,8 @@
   color: #000;
 }
 
-.calendar-header {
+.calendar-header,
+.calendar-week {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 }
