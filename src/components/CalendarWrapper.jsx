@@ -1,12 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 import CalendarBody from './CalendarBody';
 
-const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const dt = DateTime.fromFormat('01/09/2021', 'dd/MM/yyyy');
-
-export const calcWeeksInMonth = (date) => {
-    const dt = DateTime.fromFormat(date, 'dd/MM/yyyy');
+export const calcWeeksInMonth = (dt) => {
     const firstDayOfMonth = dt.startOf('month')
     const lastDayOfMonth = dt.endOf('month')
     const startWeek = firstDayOfMonth.weekNumber;
@@ -32,8 +28,10 @@ export const calcWeeksInMonth = (date) => {
     }
 }
 
-export const generateMonthDays = (weeksCount) => {
+export const generateMonthDays = (dt) => {
+    const weeksCount = calcWeeksInMonth(dt)
     const monthDays = [];
+    let selectedDt = dt;
     let dayDate = dt.startOf('week')
 
     for (let perWeek = 0; perWeek < weeksCount; perWeek++) {
@@ -41,7 +39,8 @@ export const generateMonthDays = (weeksCount) => {
 
         for (let perDay = 0; perDay < 7; perDay++) {
             week.push({
-                date: dayDate.toISODate(),
+                date: dayDate.toFormat('dd'),
+                isToday: dayDate.toISODate() === selectedDt.toISODate() // compare day with selected day
             });
 
             // get next day
@@ -54,19 +53,39 @@ export const generateMonthDays = (weeksCount) => {
     return monthDays
 }
 
-const fullCalendarDates = generateMonthDays(calcWeeksInMonth('01/09/2021'))
+const CalendarWrapper = () => {
+    const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const dt = DateTime.local().setZone('Europe/Kiev');
 
-const calendarWrapper = () => {
+    let [currentDayDt, setTimezone ] = useState(dt)
+    let [currentMonthDays, setMonthDays ] = useState(generateMonthDays(currentDayDt))
+
+    // TODO: learn how to call second hook correctly if first state value was changed
+    useEffect(() => {
+        setMonthDays(generateMonthDays(currentDayDt))
+    })
+
+    const changeTimeZoneClick = (gmtValue) => {
+        const newDt = dt.setZone(gmtValue)
+        setTimezone(newDt)
+    }
+
     return (
         <div className="calendar-wrapper">
+            <div>
+                {currentDayDt.toFormat('dd MM yyyy')}
+                <button type="button" onClick={() => changeTimeZoneClick('Europe/Kiev')}>Kyiv GMT+3</button>
+                <button type="button" onClick={() => changeTimeZoneClick( 'Australia/Sydney')}>Sydney GMT+10</button>
+                <button type="button" onClick={() => changeTimeZoneClick('Pacific/Honolulu')}>Honolulu GMT-10</button>
+            </div>
             <div className="calendar-header">
                 { weekDays.map(function (item) {
                     return (<span key={item}>{item}</span>)
                 })}
             </div>
-            <CalendarBody weeks={fullCalendarDates} />
+            <CalendarBody weeks={currentMonthDays} />
         </div>
     )
 }
 
-export default calendarWrapper
+export default CalendarWrapper

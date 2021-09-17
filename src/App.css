@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 20vmin;
   pointer-events: none;
 }
 
@@ -41,10 +41,23 @@
   width: 900px;
   background: #fff;
   color: #000;
+  margin-bottom: 100px;
 }
 
 .calendar-header,
 .calendar-week {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-day {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.current {
+  color: crimson;
+  font-weight: 800;
 }
