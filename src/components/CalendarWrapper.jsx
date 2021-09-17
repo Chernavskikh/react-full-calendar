@@ -32,7 +32,7 @@ export const generateMonthDays = (dt) => {
     const weeksCount = calcWeeksInMonth(dt)
     const monthDays = [];
     let selectedDt = dt;
-    let dayDate = dt.startOf('week')
+    let dayDate = dt.startOf('month').startOf('week')
 
     for (let perWeek = 0; perWeek < weeksCount; perWeek++) {
         const week = [];
@@ -40,7 +40,7 @@ export const generateMonthDays = (dt) => {
         for (let perDay = 0; perDay < 7; perDay++) {
             week.push({
                 date: dayDate.toFormat('dd'),
-                isToday: dayDate.toISODate() === selectedDt.toISODate() // compare day with selected day
+                isToday: dayDate.toISODate() === selectedDt.toISODate() // compare day with selected zone
             });
 
             // get next day
@@ -58,7 +58,9 @@ const CalendarWrapper = () => {
     const dt = DateTime.local().setZone('Europe/Kiev');
 
     let [currentDayDt, setTimezone ] = useState(dt)
-    let [currentMonthDays, setMonthDays ] = useState(generateMonthDays(currentDayDt))
+    let [currentMonthDays, setMonthDays ] = useState(() => {
+        return generateMonthDays(currentDayDt)
+    })
 
     // TODO: learn how to call second hook correctly if first state value was changed
     useEffect(() => {
@@ -72,8 +74,8 @@ const CalendarWrapper = () => {
 
     return (
         <div className="calendar-wrapper">
+            <h4>{currentDayDt.monthLong} {currentDayDt.toFormat('dd MM yyyy')}</h4>
             <div>
-                {currentDayDt.toFormat('dd MM yyyy')}
                 <button type="button" onClick={() => changeTimeZoneClick('Europe/Kiev')}>Kyiv GMT+3</button>
                 <button type="button" onClick={() => changeTimeZoneClick( 'Australia/Sydney')}>Sydney GMT+10</button>
                 <button type="button" onClick={() => changeTimeZoneClick('Pacific/Honolulu')}>Honolulu GMT-10</button>
