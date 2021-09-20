@@ -44,6 +44,13 @@
   margin-bottom: 100px;
 }
 
+.calendar-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+}
+
 .calendar-header,
 .calendar-week {
   display: grid;
