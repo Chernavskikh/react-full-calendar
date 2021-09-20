@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { DateTime } from 'luxon';
 import CalendarBody from './CalendarBody';
 
@@ -28,10 +28,10 @@ export const calcWeeksInMonth = (dt) => {
     }
 }
 
-export const generateMonthDays = (dt) => {
+export const generateMonthDays = (dt, userTimeZone) => {
+    console.log({userTimeZone})
     const weeksCount = calcWeeksInMonth(dt)
     const monthDays = [];
-    let selectedDt = dt;
     let dayDate = dt.startOf('month').startOf('week')
 
     for (let perWeek = 0; perWeek < weeksCount; perWeek++) {
@@ -40,7 +40,7 @@ export const generateMonthDays = (dt) => {
         for (let perDay = 0; perDay < 7; perDay++) {
             week.push({
                 date: dayDate.toFormat('dd'),
-                isToday: dayDate.toISODate() === selectedDt.toISODate() // compare day with selected zone
+                isToday: dayDate.toISODate() === userTimeZone.toISODate() // compare day with selected zone
             });
 
             // get next day
@@ -55,37 +55,49 @@ export const generateMonthDays = (dt) => {
 
 const CalendarWrapper = () => {
     const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const dt = DateTime.local().setZone('Europe/Kiev');
 
-    let [currentDayDt, setTimezone ] = useState(dt)
-    let [currentMonthDays, setMonthDays ] = useState(() => {
-        return generateMonthDays(currentDayDt)
-    })
-
-    // TODO: learn how to call second hook correctly if first state value was changed
-    useEffect(() => {
-        setMonthDays(generateMonthDays(currentDayDt))
-    })
+    // initial data
+    const dt = DateTime.local().setZone('Europe/Kiev')
+    //state
+    let [userTimeZone, setTimezone ] = useState(dt)
+    let [selectedMonthDt, setSelectedMonth ] = useState(dt.startOf('month'))
+    const nextMonth = useMemo(() => selectedMonthDt.plus({month: 1}), [selectedMonthDt]);
+    const prevMonth = useMemo(() => selectedMonthDt.minus({month: 1}), [selectedMonthDt]);
+    const months = useMemo(() => {
+        if (selectedMonthDt && userTimeZone) {
+            return generateMonthDays(selectedMonthDt, userTimeZone);
+        }
+    },[selectedMonthDt, userTimeZone])
 
     const changeTimeZoneClick = (gmtValue) => {
         const newDt = dt.setZone(gmtValue)
         setTimezone(newDt)
     }
 
+    const goToMonth = (val) => {
+        setSelectedMonth(val)
+    }
+
     return (
         <div className="calendar-wrapper">
-            <h4>{currentDayDt.monthLong} {currentDayDt.toFormat('dd MM yyyy')}</h4>
             <div>
                 <button type="button" onClick={() => changeTimeZoneClick('Europe/Kiev')}>Kyiv GMT+3</button>
                 <button type="button" onClick={() => changeTimeZoneClick( 'Australia/Sydney')}>Sydney GMT+10</button>
                 <button type="button" onClick={() => changeTimeZoneClick('Pacific/Honolulu')}>Honolulu GMT-10</button>
+            </div>
+            <small>(in some cases user's timezone affects today's date)</small>
+
+            <div className="calendar-nav">
+                <button onClick={() => goToMonth(prevMonth)} type="button">{prevMonth.monthLong}</button>
+                <h4>{selectedMonthDt.monthLong}</h4>
+                <button onClick={() => goToMonth(nextMonth)} type="button">{nextMonth.monthLong}</button>
             </div>
             <div className="calendar-header">
                 { weekDays.map(function (item) {
                     return (<span key={item}>{item}</span>)
                 })}
             </div>
-            <CalendarBody weeks={currentMonthDays} />
+            {months ? <CalendarBody weeks={months} /> : ''}
         </div>
     )
 }
