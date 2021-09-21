@@ -1,20 +1,36 @@
+:root {
+  --font-color: #222;
+  --bg-color: #f2f3f7;
+  --primary-light: #8abdff;
+  --primary: #6d5dfc;
+  --primary-dark: #5b0eeb;
+
+  --white: #FFFFFF;
+  --greyLight-1: #E4EBF5;
+  --greyLight-2: #c8d0e7;
+  --greyLight-3: #bec8e4;
+  --greyDark: #9baacf;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 18px;
+  font-family: 'Roboto', sans-serif;
+  color: var(--font-color);
+}
+
+body {
+  background: var(--greyLight-1);
+}
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 20vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -24,37 +40,64 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+@media (max-width: 500px) {
+  .App-header {
+    justify-content: flex-start;
+    margin-top: 30px;
   }
 }
 
 .calendar-wrapper {
   width: 900px;
-  background: #fff;
-  color: #000;
   margin-bottom: 100px;
+  display: block;
+  padding: 30px;
+  color: #222222;
+  border-radius: 40px;
+  box-shadow: 0.8rem 0.8rem 1.4rem var(--greyLight-2), -0.2rem -0.2rem 1.8rem var(--white);
+}
+
+@media (max-width: 500px) {
+  .calendar-wrapper {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .calendar-wrapper {
+    max-width: calc(100% - 40px);
+  }
 }
 
 .calendar-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 40px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 500px) {
+  .calendar-nav {
+    position: relative;
+    min-height: 85px;
+    align-items: flex-start;
+  }
 }
 
 .calendar-header,
 .calendar-week {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-header {
+  font-weight: 700;
+}
+
+.calendar-body {
+  border-radius: 1rem;
+  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem var(--white);
+  margin-top: 15px;
 }
 
 .calendar-day {
@@ -67,4 +110,112 @@
 .current {
   color: crimson;
   font-weight: 800;
+}
+
+.arrow {
+  font-size: 27px;
+  line-height: 0;
+  position: relative;
+  top: 3px;
+}
+
+.month {
+  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem var(--white);
+  min-height: 40px;
+  font-size: 16px;
+  border-radius: 5px;
+  display: flex;
+  align-items: stretch;
+  padding: 5px;
+  min-width: 140px;
+}
+
+@media (max-width: 500px) {
+  .month {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.month-display {
+  box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2), inset -0.2rem -0.2rem 0.5rem var(--white);
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn {
+  color: var(--font-color);
+  position: relative;
+  cursor: pointer;
+  border: none;
+  appearance: none;
+  min-height: 40px;
+  padding: 10px;
+  box-shadow: .3rem .3rem .6rem var(--greyLight-2),
+  -.2rem -.2rem .5rem var(--white);
+  border-radius: 5px;
+  background: transparent;
+  min-width: 100px;
+}
+
+.btn:hover {
+  color: var(--primary);
+}
+
+.btn:active {
+  box-shadow: inset .2rem .2rem .5rem var(--greyLight-2),
+  inset -.2rem -.2rem .5rem var(--white);
+}
+
+.btn:focus {
+  border: none;
+  outline: 0 !important;
+  outline-style: none;
+}
+
+.zone-btns-nav {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.zone-btns-nav .btn br {
+  display: none;
+}
+
+.zone-btns-nav .btn + .btn {
+  margin-left: 10px;
+  height: 30px;
+}
+
+@media (max-width: 500px) {
+  .zone-btns-nav {
+    justify-content: center;
+  }
+
+  .zone-btns-nav .btn {
+    min-height: 36px;
+    padding: 3px 15px;
+    width: 33%;
+    min-width: auto;
+  }
+
+  .zone-btns-nav .btn br {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 374px) {
+  .zone-btns-nav .btn {
+    font-size: 11px;
+  }
+}
+
+.zone-btns p {
+  font-size: 10px;
+  text-align: right;
 }

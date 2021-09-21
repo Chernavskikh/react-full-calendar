@@ -40,6 +40,7 @@ export const generateMonthDays = (dt, userTimeZone) => {
         for (let perDay = 0; perDay < 7; perDay++) {
             week.push({
                 date: dayDate.toFormat('dd'),
+                isoDate: dayDate.toISODate(),
                 isToday: dayDate.toISODate() === userTimeZone.toISODate() // compare day with selected zone
             });
 
@@ -80,24 +81,27 @@ const CalendarWrapper = () => {
 
     return (
         <div className="calendar-wrapper">
-            <div>
-                <button type="button" onClick={() => changeTimeZoneClick('Europe/Kiev')}>Kyiv GMT+3</button>
-                <button type="button" onClick={() => changeTimeZoneClick( 'Australia/Sydney')}>Sydney GMT+10</button>
-                <button type="button" onClick={() => changeTimeZoneClick('Pacific/Honolulu')}>Honolulu GMT-10</button>
-            </div>
-            <small>(in some cases user's timezone affects today's date)</small>
-
             <div className="calendar-nav">
-                <button onClick={() => goToMonth(prevMonth)} type="button">{prevMonth.monthLong}</button>
-                <h4>{selectedMonthDt.monthLong}</h4>
-                <button onClick={() => goToMonth(nextMonth)} type="button">{nextMonth.monthLong}</button>
+                <button className="btn" onClick={() => goToMonth(prevMonth)} type="button"><span className="arrow">&#x2039;</span> {prevMonth.monthLong} </button>
+                <div className="month">
+                    <span className="month-display">{selectedMonthDt.monthLong} {selectedMonthDt.year}</span>
+                </div>
+                <button className="btn" onClick={() => goToMonth(nextMonth)} type="button">{nextMonth.monthLong} <span className="arrow">&#x203A;</span></button>
             </div>
             <div className="calendar-header">
                 { weekDays.map(function (item) {
                     return (<span key={item}>{item}</span>)
                 })}
             </div>
-            {months ? <CalendarBody weeks={months} /> : ''}
+            {months ? <CalendarBody weeks={months} /> : null}
+            <div className={'zone-btns'}>
+                <div className={'zone-btns-nav'}>
+                    <button className="btn" type="button" onClick={() => changeTimeZoneClick('Europe/Kiev')}>Kyiv <br/> GMT+3</button>
+                    <button className="btn" type="button" onClick={() => changeTimeZoneClick( 'Australia/Sydney')}>Sydney <br/> GMT+10</button>
+                    <button className="btn" type="button" onClick={() => changeTimeZoneClick('Pacific/Honolulu')}>Honolulu <br/> GMT-10</button>
+                </div>
+                <p>* in some cases user's timezone affects today's date</p>
+            </div>
         </div>
     )
 }
