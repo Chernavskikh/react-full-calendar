@@ -1,6 +1,6 @@
 # Full calendar component based on luxon
 ## DEMO: https://chernavskikh.github.io/react-full-calendar/
-![alt text](https://github.com/chernavskikh/react-full-calendar/blob/master/app-screen.png?raw=true)
+![demo image](https://raw.githubusercontent.com/chernavskikh/react-full-calendar/main/app-screen.png)
 
 ## Getting Started with Create React App
 
